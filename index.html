@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLEX</title>
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, Ubuntu, sans-serif;
+            background: linear-gradient(120deg, #0a0f13 0%, #101c1c 100%);
+            color: #ffffff;
+            font-size: 120%;
+            min-height: 100vh;
+            background-attachment: fixed;
+            transition: background 0.6s cubic-bezier(.4,0,.2,1);
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 110px;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0f13 0%, #101c1c 100%);
+            padding-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 2px 0 16px 0 #000a;
+            z-index: 2;
+            border-right: 1.5px solid #000000;
+            transition: background 0.5s, box-shadow 0.3s;
+        }
+        .sidebar-button, .contact-admin-btn {
+            width: 80%;
+            min-width: 80px;
+            max-width: 200px;
+            box-sizing: border-box;
+        }
+        .sidebar-button {
+            background: linear-gradient(90deg, #0a0f13 0%, #000000 100%);
+            color: #00ff41;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 0;
+            margin: 12px 0;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            box-shadow: 0 2px 8px #00ff4071;
+            transition: 
+                background 0.3s, 
+                color 0.2s, 
+                transform 0.18s,
+                box-shadow 0.2s;
+            text-decoration: none;
+            display: block;
+            outline: none;
+        }
+        .sidebar-button:focus {
+            outline: 2px solid #00ff40;
+            outline-offset: 2px;
+        }
+        .sidebar-button:hover {
+            background: linear-gradient(90deg, #00ff41 0%, #000000 100%);
+            color: #0a0f13;
+            transform: scale(1.07) translateY(-2px);
+            box-shadow: 0 6px 18px #00ff4144;
+        }
+        .contact-admin-btn {
+            background: linear-gradient(90deg, #00ff41 0%, #0a0f13 100%);
+            color: #0a0f13;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 0;
+            margin: 24px 0 0 0;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            box-shadow: 0 2px 12px #00ff4133;
+            transition: 
+                background 0.3s, 
+                color 0.2s, 
+                transform 0.18s,
+                box-shadow 0.2s;
+            text-decoration: none;
+            display: block;
+            outline: none;
+        }
+        .contact-admin-btn:focus {
+            outline: 2px solid #ff0000;
+            outline-offset: 2px;
+        }
+        .contact-admin-btn:hover {
+            background: linear-gradient(90deg, #0a0f13 0%, #ff0000 100%);
+            color: #ff0000;
+            transform: scale(1.07) translateY(-2px);
+            box-shadow: 0 6px 18px #00ff4166;
+        }
+        .main-content {
+            margin-left: 130px;
+            padding: 32px 24px 24px 24px;
+            min-height: 100vh;
+            transition: margin 0.4s, padding 0.4s;
+        }
+        .welcome-box {
+            background: linear-gradient(135deg, #000000 0%, #000000 100%);
+            border-radius: 30px;
+            padding: 36px 32px 32px 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 16px #03ff2047;
+            text-align: center;
+            border: 1.5px solid #00ff403b;
+            transition: box-shadow 0.3s, background 0.5s;
+            animation: fadeInDown 1s;
+        }
+        .welcome-box h2 {
+            color: #00ff41;
+            font-size: 2em;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 12px #00ff403e;
+            transition: color 0.3s;
+        }
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 28px;
+            animation: fadeIn 1.2s;
+        }
+        .movie-card {
+            background: linear-gradient(135deg, #000000 0%, #000000 100%);
+            border-radius: 25px;
+            padding: 20px 18px 18px 18px;
+            box-shadow: 0 4px 16px #00ff4111;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: 
+                box-shadow 0.3s, 
+                transform 0.18s, 
+                background 0.3s;
+            border: 1.5px solid #00000022;
+            opacity: 0;
+            animation: fadeInUp 0.8s forwards;
+        }
+        .movie-card:nth-child(1) { animation-delay: 0.1s; }
+        .movie-card:nth-child(2) { animation-delay: 0.2s; }
+        .movie-card:nth-child(3) { animation-delay: 0.3s; }
+        .movie-card:nth-child(4) { animation-delay: 0.4s; }
+        .movie-card:nth-child(5) { animation-delay: 0.5s; }
+        .movie-card:nth-child(6) { animation-delay: 0.6s; }
+        .movie-card:hover {
+            box-shadow: 0 8px 32px #00ff4133;
+            transform: translateY(-8px) scale(1.04);
+            background: linear-gradient(135deg, #101c1c 0%, #0a0f13 100%);
+        }
+        .movie-card img {
+            width: 100%;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            background: #0a0f13;
+            min-height: 180px;
+            object-fit: cover;
+            box-shadow: 0 2px 8px #00ff4133;
+            transition: box-shadow 0.3s;
+            max-width: 250px;
+        }
+        .movie-card h2 {
+            font-size: 1.15em;
+            color: #00ff41;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-align: center;
+            text-shadow: 0 2px 8px #00ff4033;
+            transition: color 0.3s;
+        }
+        .movie-card p {
+            font-size: 1em;
+            color: #b6ffb6;
+            text-align: center;
+            transition: color 0.3s;
+        }
+        .movie-card a {
+            margin-top: 10px;
+            background: linear-gradient(90deg, #00ff41 0%, #0a0f13 100%);
+            color: #0a0f13;
+            border: none;
+            border-radius: 16px;
+            padding: 8px 18px;
+            font-size: 1em;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #00ff4122;
+            transition: 
+                background 0.3s, 
+                transform 0.15s,
+                box-shadow 0.2s;
+            display: inline-block;
+            outline: none;
+        }
+        .movie-card a:focus {
+            outline: 2px solid #00ff41;
+            outline-offset: 2px;
+        }
+        .movie-card a:hover {
+            background: linear-gradient(90deg, #0a0f13 0%, #00ff41 100%);
+            color: #00ff41;
+            transform: scale(1.08);
+            box-shadow: 0 6px 18px #00ff4144;
+        }
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
+                padding: 16px 2vw 24px 2vw;
+            }
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: center;
+                padding: 10px 0;
+                box-shadow: none;
+                border-right: none;
+                border-bottom: 1.5px solid #0f3d0f;
+            }
+            .sidebar-button, .contact-admin-btn {
+                margin: 8px 6px;
+                min-width: 80px;
+                font-size: 0.95em;
+                padding: 10px 0;
+            }
+            .movie-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 18px;
+            }
+            .movie-card img {
+                min-height: 120px;
+                max-width: 180px;
+            }
+            .welcome-box {
+                padding: 24px 8px 20px 8px;
+            }
+        }
+        @media (max-width: 600px) {
+            .main-content {
+                margin-left: 0;
+                padding: 8px 2vw 16px 2vw;
+            }
+            .sidebar {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 8px 0;
+            }
+            .sidebar-button, .contact-admin-btn {
+                width: 95%;
+                margin: 6px auto;
+                font-size: 0.95em;
+                padding: 10px 0;
+            }
+            .movie-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .movie-card {
+                padding: 12px 6px 12px 6px;
+            }
+            .movie-card img {
+                min-height: 90px;
+                max-width: 100%;
+            }
+            .welcome-box {
+                padding: 14px 4px 10px 4px;
+            }
+            .neon-title {
+                font-size: 1.3em !important;
+            }
+        }
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes fadeIn {
+            from { opacity: 0;}
+            to { opacity: 1;}
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes neon {
+            from {
+                text-shadow:
+                    0 0 5px #00ff41,
+                    0 0 10px #00ff41,
+                    0 0 20px #00ff41,
+                    0 0 40px #00ff41;
+            }
+            to {
+                text-shadow:
+                    0 0 10px #00ff41,
+                    0 0 20px #00ff41,
+                    0 0 40px #00ff41,
+                    0 0 80px #00ff41;
+            }
+        }
+    </style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
+        .neon-title {
+            font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+            font-size: 2.7em;
+            font-weight: 900;
+            color: #00ff41;
+            letter-spacing: 3px;
+            margin-bottom: 18px;
+            text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41, 0 0 15px #00ff41;
+            filter: none;
+            background: none;
+            animation: neon 1.5s infinite alternate;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a class="sidebar-button" href="index.html">Home</a>
+        <a class="sidebar-button" href="movies.html" target="_blank">Movies</a>
+        <a class="sidebar-button" href="tvshows.html" target="_blank">TV Shows</a>
+        <a class="sidebar-button" href="sports.html" target="_blank">Sports</a>
+        <a class="sidebar-button" href="kids.html" target="_blank">Kids</a>
+        <a class="contact-admin-btn" href="mailto:heyyanurag0529@gmail.com" target="_blank">Contact Admin</a>
+    </div>
+    <div class="main-content">
+        <div class="welcome-box">
+            <h2 class="neon-title">GLEX PREMIUM HACKS</h2>
+            <p>Buy Premium Antiban Hacks In Cheap Price</p>
+        </div>
+        <div class="movie-grid">
+            <div class="movie-card">
+                <img src="bgmi.png" alt="Movie 1">
+                <h2>BGMI PREMIUM MOD APK</h2>
+                <p>100% Antiban</p>
+                <a href="bgmihack.html" target="_blank">PURCHASE</a>
+            </div>
+            <div class="movie-card">
+                <img src="FF.jpg" alt="Movie 2">
+                <h2>FREE FIRE MOD APK</h2>
+                <p>100% Antiban</p>
+                <a href="movie2.html" target="_blank">PURCHASE</a>
+            </div>
+            <div class="movie-card">
+                <img src="cid:image0" alt="Movie 3">
+                <h2>Movie Title 3</h2>
+                <p>Thrilling mystery with unexpected twists.</p>
+                <a href="movie2.html" target="_blank">PURCHASE</a>
+            </div>
+            <div class="movie-card">
+                <img src="cid:image0" alt="Movie 4">
+                <h2>Movie Title 4</h2>
+                <p>A comedy that will make you laugh out loud.</p>
+                <a href="movie2.html" target="_blank">PURCHASE</a>
+            </div>
+            <div class="movie-card">
+                <img src="cid:image0" alt="Movie 5">
+                <h2>Movie Title 5</h2>
+                <p>A sci-fi journey through space and time.</p>
+                <a href="movie2.html" target="_blank">PURCHASE</a>
+            </div>
+            <div class="movie-card">
+                <img src="cid:image0" alt="Movie 6">
+                <h2>FREE FIRE ALL HACKS</h2>
+                <p>PAID & FREE HACKS AVAILABLE</p>
+                <a href="movie2.html" target="_blank">PURCHASE</a>
+            </div>
+            <div class="movie-card">
+                <img src="cid:image0" alt="Movie 7">
+                <h2>FREE FIRE ALL HACKS</h2>
+                <p>PAID & FREE HACKS AVAILABLE</p>
+                <a href="movie2.html" target="_blank">PURCHASE</a>
+            </div>
+            <div class="movie-card">
+                <img src="cid:image0" alt="Movie 8">
+                <h2>FREE FIRE ALL HACKS</h2>
+                <p>PAID & FREE HACKS AVAILABLE</p>
+                <a href="movie2.html" target="_blank">PURCHASE</a>
+            </div>
+            <div class="movie-card">
+                <img src="cid:image0" alt="Movie 9">
+                <h2>FREE FIRE ALL HACKS</h2>
+                <p>PAID & FREE HACKS AVAILABLE</p>
+                <a href="movie2.html" target="_blank">PURCHASE</a>
+            </div>
+            <div class="movie-card">
+                <img src="cid:image0" alt="Movie 10">
+                <h2>FREE FIRE ALL HACKS</h2>
+                <p>PAID & FREE HACKS AVAILABLE</p>
+                <a href="movie2.html" target="_blank">PURCHASE</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
